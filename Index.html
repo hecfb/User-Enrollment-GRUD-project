@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #e6e6e6;
+        }
+
+        div {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b0b0;
+        }
+
+        input[type="text"],
+        button {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            width: 100%;
+            background-color: #333;
+            color: #e6e6e6;
+        }
+
+        input[type="text"]::placeholder {
+            color: #7a7a7a;
+        }
+
+        button {
+            width: auto;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #response {
+            white-space: pre-wrap;
+        }
+    </style>
+
+    <script>
+        const API_ENDPOINT = "https://3uxj0pup51.execute-api.us-east-1.amazonaws.com/dev";
+
+        async function getUser() {
+            const userId = document.getElementById("userId").value;
+            try {
+                const response = await fetch(`${API_ENDPOINT}/user?user_id=${userId}`, {
+                    method: "GET",
+                });
+                const data = await response.json();
+                document.getElementById("response").textContent = JSON.stringify(data, null, 4);
+            } catch (error) {
+                console.error("Error fetching user:", error);
+            }
+        }
+
+        async function getUsers() {
+            try {
+                const response = await fetch(`${API_ENDPOINT}/users`, {
+                    method: "GET",
+                });
+                const data = await response.json();
+                document.getElementById("response").textContent = JSON.stringify(data, null, 4);
+            } catch (error) {
+                console.error("Error fetching all users:", error);
+            }
+        }
+
+        async function saveUser() {
+            const requestBody = {
+                userid: document.getElementById("newUserId").value,
+                name: document.getElementById("name").value,
+                age: document.getElementById("age").value,
+                email: document.getElementById("email").value
+            };
+            try {
+                const response = await fetch(`${API_ENDPOINT}/user`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                const data = await response.json();
+                document.getElementById("response").textContent = JSON.stringify(data, null, 4);
+            } catch (error) {
+                console.error("Error saving user:", error);
+            }
+        }
+
+        async function modifyUser() {
+            const requestBody = {
+                userid: document.getElementById("modifyUserId").value,
+                updateKey: document.getElementById("updateKey").value,
+                updateValue: document.getElementById("updateValue").value
+            };
+            try {
+                const response = await fetch(`${API_ENDPOINT}/user`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                const data = await response.json();
+                document.getElementById("response").textContent = JSON.stringify(data, null, 4);
+            } catch (error) {
+                console.error("Error modifying user:", error);
+            }
+        }
+
+        async function deleteUser() {
+            const userId = document.getElementById("deleteUserId").value;
+            try {
+                const response = await fetch(`${API_ENDPOINT}/user`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ user_id: userId })
+                });
+                const data = await response.json();
+                document.getElementById("response").textContent = JSON.stringify(data, null, 4);
+            } catch (error) {
+                console.error("Error deleting user:", error);
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div>
+        <h2>Save User</h2>
+        <label for="newUserId">User ID:</label>
+        <input type="text" id="newUserId">
+        <label for="name">Name:</label>
+        <input type="text" id="name">
+        <label for="age">Age:</label>
+        <input type="text" id="age">
+        <label for="email">Email:</label>
+        <input type="text" id="email">
+        <button onclick="saveUser()">Save User</button>
+    </div>
+
+    <div>
+        <h2>Get User</h2>
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId">
+        <button onclick="getUser()">Get User</button>
+    </div>
+
+    <div>
+        <h2>Modify User</h2>
+        <label for="modifyUserId">User ID:</label>
+        <input type="text" id="modifyUserId">
+        <label for="updateKey">Attribute to Update:</label>
+        <input type="text" id="updateKey">
+        <label for="updateValue">New Value:</label>
+        <input type="text" id="updateValue">
+        <button onclick="modifyUser()">Modify User</button>
+    </div>
+
+    <div>
+        <h2>Delete User</h2>
+        <label for="deleteUserId">User ID:</label>
+        <input type="text" id="deleteUserId">
+        <button onclick="deleteUser()">Delete User</button>
+    </div>
+
+    <div>
+        <h2>Get All Users</h2>
+        <button onclick="getUsers()">Get Users</button>
+    </div>
+
+    <div>
+        <h2>Response</h2>
+        <pre id="response"></pre>
+    </div>
+
+</body>
+
+</html>
