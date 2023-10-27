@@ -1,0 +1,22 @@
+technologies use
+
+DynamoDB
+Lambda
+S3
+API Gateway
+IAM
+Github
+Chatgpt
+
+libraries
+
+boto3
+logging
+json
+
+lenguajes
+
+python 3.10
+html
+css
+js
